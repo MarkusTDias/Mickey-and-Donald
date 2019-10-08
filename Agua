@@ -1,0 +1,38 @@
+{
+    //variáveis
+    private float _mov = 0.3f;
+    private float _canMov;
+    
+    
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        _canMov = Time.time + _mov;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        Movimentação();
+        
+
+
+    }
+
+    
+    public void Movimentação()
+    {
+        if (Time.time > _canMov)
+        {
+
+
+            transform.position = new Vector3(transform.position.x, transform.position.y - 1, 0);
+
+            _canMov = Time.time + _mov;
+        }
+
+        if (transform.position.y < -7)
+            Destroy(this.gameObject);
+    }
+}
