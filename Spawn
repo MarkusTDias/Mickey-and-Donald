@@ -1,0 +1,145 @@
+{
+    //criaçãos de objetos instanciados (gameObject)
+    [SerializeField]
+    private GameObject fogoPrefab;
+    [SerializeField]
+    private GameObject _mangueiraPrefab;
+    [SerializeField]
+    private GameObject _mangueiraGPrefab;
+    [SerializeField]
+    private GameObject aguaPrefab;
+    [SerializeField]
+    private GameObject _jogadorPrefab;
+
+    //acesso a outros scripts
+    private Mangueira _mangueira;
+    private MangueiraG _mangueiraG;
+    private Jogador _jogador;
+    private UIManager _uiManager;
+    private Mickey _mickey;
+
+    //variáveis
+    public int [] eixoX = new int [3];
+    private float _fireRate = 1f;
+    private float _canFire = 1f;
+    private float _canWater = 2f;
+    private float _waterRate = 1f;
+    private int contagemFogo = 0;
+    private int[] _mangueiraRandom= new int[8];
+    public bool canSpawn = true;
+    public bool canSpawnFogo = true;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        _mangueiraRandom[0] = 0;
+        _mangueiraRandom[1] = 0;
+        _mangueiraRandom[2] = 0;
+        _mangueiraRandom[3] = 0;
+        _mangueiraRandom[4] = 1;
+        _mangueiraRandom[5] = 0;
+        _mangueiraRandom[6] = 0;
+        _mangueiraRandom[7] = 1;
+        eixoX[0] = -2;
+        eixoX[1] = 0;
+        eixoX[2] = 2;
+        Instantiate(_jogadorPrefab, new Vector3(0, 3, 0), Quaternion.identity);
+
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+        _mickey = GameObject.Find("Mickey").GetComponent<Mickey>();
+
+        Mangueira();
+        
+       
+            Fogo();
+        
+    }
+
+    //gerar fogo
+    private void Fogo()
+    {
+        if (Time.time > _canFire && canSpawnFogo == true)
+        {
+           
+            
+                Instantiate(fogoPrefab, new Vector3(eixoX[Random.Range(0, 3)], -3, 0), Quaternion.identity);
+                contagemFogo++;
+                _canFire = Time.time + _fireRate;
+
+            
+        }
+
+    }
+
+    //delay para gerar o fogo
+    private IEnumerator FogoRoutine()
+    {
+        yield return new WaitForSeconds(15.0f);
+
+        Fogo();
+
+    }
+
+    //gerar mangueira
+    private void Mangueira()
+    {
+        if (_mickey.movMickey == -1)
+            _waterRate = 1f;
+        else
+            _waterRate = 1.3f;
+
+        if (Time.time > _canWater && canSpawn == true)
+        {
+            if (_uiManager.score <= 15)
+            {
+                Instantiate(_mangueiraPrefab, new Vector3(-3f, -3.5f, 0), Quaternion.identity);
+            }
+
+            else if (_uiManager.score > 15)
+            {
+                if (_mangueiraRandom[Random.Range(0, 5)] == 0)
+                {
+                    Instantiate(_mangueiraPrefab, new Vector3(-3f, -3.5f, 0), Quaternion.identity);
+
+                }
+                else
+                {
+                    Instantiate(_mangueiraGPrefab, new Vector3(-3f, -3.5f, 0), Quaternion.identity);
+
+                }
+                
+            }
+
+            else if (_uiManager.score > 30)
+            {
+                if (_mangueiraRandom[Random.Range(0, 8)] == 0)
+                {
+                    Instantiate(_mangueiraPrefab, new Vector3(-3f, -3.5f, 0), Quaternion.identity);
+
+                }
+
+                else
+                {
+                    Instantiate(_mangueiraGPrefab, new Vector3(-3f, -3.5f, 0), Quaternion.identity);
+
+                }
+
+            }
+
+            _canWater = Time.time + _waterRate;
+        }
+        
+        
+         
+        
+    }
+
+    
+}
