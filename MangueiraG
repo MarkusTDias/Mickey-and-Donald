@@ -1,0 +1,142 @@
+{
+    //variáveis
+    private float _mov = 0.5f;
+    private float _canMov;
+    public float v;
+      [SerializeField] //mostrar variável sendo utilizada no unity
+    public bool disparo2 = false;
+
+
+    //acesso a scripts
+    private Mickey _mickey;
+    private Mangueira _mangueira;
+    private Jogador _jogador;
+    private Spawn _spawn;
+    
+
+
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        
+        
+        disparo2 = false;
+        _canMov = Time.time + _mov;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        _mickey = GameObject.Find("Mickey").GetComponent<Mickey>();
+        _spawn = GameObject.Find("Spawn").GetComponent<Spawn>();
+        _mangueira = GameObject.Find("Mangueira(Clone)").GetComponent<Mangueira>();
+        _jogador = GameObject.Find("Jogador(Clone)").GetComponent<Jogador>();
+
+        CondiçõesDeMovimentação();
+        Movimentação();
+        Destruição();
+
+
+
+
+    }
+
+    //Delay para destruir
+    private IEnumerator DisparoRoutine()
+    {
+        yield return new WaitForSeconds(1.0f);
+
+        Destroy(this.gameObject);
+
+    }
+
+    public void Movimentação()
+    {
+
+
+        if (Time.time > _canMov && _spawn.canSpawn == true)
+        {
+
+            if (transform.position == new Vector3(-3f, 3.0f, 0))
+            {
+                _jogador.disparoAgua = true;
+                transform.position = new Vector3(-14f, 3.0f, 0);
+                StartCoroutine(DisparoRoutine());
+
+            }
+            if (transform.position == new Vector3(-4, 2f, 0))
+            {
+                transform.position = new Vector3(-3f, 3.0f, 0);
+
+
+            }
+            if (transform.position == new Vector3(-3f, -3.5f, 0))
+            {
+                transform.position = new Vector3(-4f, -3f, 0);
+
+            }
+            else if (transform.position == new Vector3(-4f, transform.position.y, 0))
+            {
+
+
+
+
+                transform.position = new Vector3(-4f, transform.position.y + v, 0);
+
+
+
+            }
+
+
+            _canMov = Time.time + _mov;
+        }
+    }
+
+    public void CondiçõesDeMovimentação()
+    {
+        if (_mickey.movMickey == -1)
+        {
+            _mov = 0.5f;
+        }
+        else
+        {
+            _mov = 0.7f;
+        }
+
+        if (transform.position == new Vector3(transform.position.x, -1, 0) && _mickey.movMickey != 0)
+        {
+            v = 0;
+            _spawn.canSpawn = false;
+
+        }
+        else if (transform.position == new Vector3(transform.position.x, 1, 0) && _mickey.movMickey != 1)
+        {
+            v = 0;
+            _spawn.canSpawn = false;
+
+        }
+        else
+        {
+            v = 1;
+            _spawn.canSpawn = true;
+
+        }
+    }
+
+    private void Destruição()
+    {
+        if (_jogador.dano == true)
+        {
+            _spawn.canSpawn = true;
+            Destroy(this.gameObject);
+        }
+
+        if (_jogador.lives == 0)
+        {
+            _spawn.canSpawn = false;
+            Destroy(this.gameObject);
+        }
+    }
+
+}
