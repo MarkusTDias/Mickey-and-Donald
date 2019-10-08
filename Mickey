@@ -1,0 +1,31 @@
+{
+    //variáveis
+    public int movMickey = -1;
+
+    
+    void Start()
+    {
+        transform.position = new Vector3(-3f, -3f, 0);
+    }
+
+   
+    void Update()
+    {
+        Movimentacao();
+    }
+
+    public void Movimentacao()
+    {
+        if (Input.GetKeyDown("up") && movMickey != 1)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y+2, 0);
+            movMickey++;
+        }
+
+        if (Input.GetKeyDown("down") && movMickey != -1)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y-2, 0);
+            movMickey--;
+        }
+    }
+}
