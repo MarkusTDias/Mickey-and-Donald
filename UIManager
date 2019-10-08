@@ -1,0 +1,33 @@
+{
+    //criação dos sprites da vida
+    public Sprite[] lives;
+    public Image livesImageDisplay;
+    
+    //criação do texto score e das vidas
+    public Text scoreText;
+    public Text livesText;
+    
+    //variáveis
+    public int score;
+   public void UpdateLives(int currentLives)
+    {
+        livesImageDisplay.sprite = lives[currentLives];
+        if (currentLives > 0)
+        {
+            livesText.text = "Lives: " + currentLives;
+        }
+        else
+            livesText.text = "APERTE ESPAÇO PARA REINICIAR";
+
+        
+
+    }
+
+    public void UpdateScore()
+    {
+        score += 1;
+        scoreText.text = "Score: " + score;
+
+        
+    }
+}
