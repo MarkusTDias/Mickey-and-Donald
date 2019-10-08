@@ -1,0 +1,24 @@
+{
+    //acesso a scripts
+    private Spawn _spawn;
+    private Jogador _jogador;
+    private UIManager _uiManager;
+    private void Update()
+    {
+        _jogador = GameObject.Find("Jogador(Clone)").GetComponent<Jogador>();
+        _spawn = GameObject.Find("Spawn").GetComponent<Spawn>();
+        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+
+        if (_jogador.gameOver == true && Input.GetKeyDown(KeyCode.Space))
+        {
+            _jogador.lives = 3;
+            _spawn.canSpawn = true;
+            _spawn.canSpawnFogo = true;
+            _jogador.gameOver = false;
+            _uiManager.score = 0;
+            
+        }
+    }
+    
+
+}
