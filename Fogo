@@ -1,0 +1,87 @@
+{
+    
+    //acesso a scripts
+    private Jogador _jogador;
+    private Spawn _spawn;
+    private UIManager _uiManager;
+    
+    //variáveis
+    private float _v = 1;
+    private float _mov = 2f;
+    private float _canMov = 2f;
+    private float _damage = 2f;
+    private float _canDamage = 2f;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+
+        _canMov = Time.time + _mov;
+        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+
+
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        _jogador = GameObject.Find("Jogador(Clone)").GetComponent<Jogador>();
+        _spawn = GameObject.Find("Spawn").GetComponent<Spawn>();
+        Movimentação();
+
+        
+    }
+
+    //colisão
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+       
+        if (other.name == "Agua(Clone)")
+        {
+           
+            
+            
+
+            Destroy(other.gameObject);
+            _uiManager.UpdateScore();
+            Destroy(this.gameObject);
+
+
+        }
+        
+    }
+
+    private void Movimentação()
+    {
+        
+        if (Time.time > _canMov)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y + _v , 0);
+            _canMov = Time.time + _mov;
+        }
+
+        if(transform.position.y > 2 && Time.time > _canDamage)
+        {
+            _jogador.lives -= 1;
+            _jogador.dano = true;
+            Destroy(this.gameObject);
+            _canDamage += Time.time + _damage;
+        }
+
+        if (_jogador.lives == 0)
+        {
+            _spawn.canSpawnFogo = false;
+            Destroy(this.gameObject);
+        }
+    }
+
+    //delay para ser destruído
+    private IEnumerator DestroyRoutine()
+    {
+        yield return new WaitForSeconds(1.0f);
+
+        Destroy(this.gameObject);
+
+    }
+}
